@@ -11,6 +11,10 @@ The script sets the DNS to well-known DNS servers that help users access web ser
 - **shecan**: 178.22.122.100, 185.51.200.2
 - **begzar**: 185.55.226.26, 185.55.226.25
 
+## Install
+
+To install `dns-bezan` simply run `install.sh`.
+
 ## Usage
 
 To change the DNS settings, simply run the script with one of the predefined options:
