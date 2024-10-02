@@ -21,4 +21,5 @@ To change the DNS settings, simply run the script with one of the predefined opt
 
 ```bash
 sudo dns-bezan electro
-
+```
+by sending SIGINT signal using `Cntl + C` it stops and recovers the default dns settings on your machine.
