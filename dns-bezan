@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Define DNS servers
+declare -A DNS_SERVERS
+DNS_SERVERS=( ["electro"]="78.157.42.101 78.157.42.100" 
+              ["403"]="10.202.10.202 10.202.10.102"
+              ["shecan"]="178.22.122.100 185.51.200.2"
+              ["begzar"]="185.55.226.26 185.55.226.25" )
+
+# Backup original resolv.conf
+ORIGINAL_RESOLV=$(cat /etc/resolv.conf)
+
+# Function to restore original DNS configuration
+restore_dns() {
+    echo "$ORIGINAL_RESOLV" | sudo tee /etc/resolv.conf > /dev/null
+    echo "Restored original DNS settings."
+    exit 1
+}
+
+# Function to set DNS
+set_dns() {
+    local servers="$1"
+    echo -e "nameserver $(echo $servers | awk '{print $1}')\nnameserver $(echo $servers | awk '{print $2}')" | sudo tee /etc/resolv.conf > /dev/null
+    echo "DNS set to: $servers"
+}
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: dns-bezan [electro|403|shecan|begzar]"
+    exit 1
+fi
+
+# Check if valid DNS set is provided
+if [ -z "${DNS_SERVERS[$1]}" ]; then
+    echo "Invalid option. Available options: electro, 403, shecan, begzar."
+    exit 1
+fi
+
+# Set DNS
+set_dns "${DNS_SERVERS[$1]}"
+
+# Trap Ctrl+C and restore DNS
+trap restore_dns SIGINT
+
+# Keep running until Ctrl+C is pressed
+while true; do
+    sleep 1
+done
+
